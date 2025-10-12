@@ -6,7 +6,7 @@ import { TaskForm } from './components/features/TaskForm';
 import { TaskListView } from './components/features/TaskListView';
 
 function App() {
-  const { initialize, appState, setTheme } = useTaskStore();
+  const { initialize, appState } = useTaskStore();
 
   useEffect(() => {
     // Initialize the app

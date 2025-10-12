@@ -1,5 +1,5 @@
 import Dexie, { Table } from 'dexie';
-import { Task, AppState, defaultAppState } from '../types';
+import { Task, AppState, defaultAppState, TaskStatus } from '../types';
 
 // Define the database class
 export class DailyTaskDatabase extends Dexie {
@@ -39,7 +39,7 @@ export async function createTask(taskData: Omit<Task, 'id' | 'createdAt' | 'stat
     ...taskData,
     id: crypto.randomUUID(),
     createdAt: new Date(),
-    status: 'pending' as const,
+    status: TaskStatus.Pending,
   };
 
   await db.tasks.add(newTask);
