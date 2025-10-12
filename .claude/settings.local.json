@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: Add project specifications\n\n- Add design specification (DESIGN_SPEC.md)\n- Add technical specification (TECHNICAL_SPEC.md)\n- Add original app idea document\n- Add .gitignore\n\nThe design spec outlines all features, user flows, and UX considerations.\nThe technical spec defines the tech stack (React + TypeScript + Vite),\narchitecture, data models, and implementation plan.\n\nTech stack:\n- React 18 + TypeScript + Vite\n- Tailwind CSS for styling\n- Zustand for state management\n- Dexie.js for IndexedDB local storage\n- PWA support for Android and cross-platform\n- date-fns for date utilities\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
