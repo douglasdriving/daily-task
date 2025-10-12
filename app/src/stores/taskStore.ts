@@ -1,0 +1,334 @@
+import { create } from 'zustand';
+import { Task, AppState, TimeAvailability, TaskStatus, CreateTaskInput } from '../types';
+import {
+  db,
+  initializeDatabase,
+  createTask as dbCreateTask,
+  updateTask as dbUpdateTask,
+  deleteTask as dbDeleteTask,
+  getAllTasks,
+  getAppState,
+  updateAppState as dbUpdateAppState,
+  getEligibleTasks,
+  getTaskById,
+} from '../db';
+import {
+  selectDailyTask,
+  shouldShowTimeAvailabilityCheck,
+  getEligibleTasksForToday,
+} from '../utils/prioritization';
+import { startOfDay } from 'date-fns';
+import { addDays } from 'date-fns';
+
+interface TaskStore {
+  // State
+  tasks: Task[];
+  dailyTask: Task | null;
+  appState: AppState | null;
+  isLoading: boolean;
+  showTimeCheck: boolean;
+
+  // Actions
+  initialize: () => Promise<void>;
+  loadTasks: () => Promise<void>;
+
+  // Task management
+  addTask: (taskData: CreateTaskInput) => Promise<void>;
+  updateTask: (id: string, updates: Partial<Task>) => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
+
+  // Daily task flow
+  checkDailyTask: (availability: TimeAvailability) => Promise<void>;
+  completeTask: (id: string) => Promise<void>;
+  postponeTask: (id: string, days: number, reason?: string) => Promise<void>;
+
+  // App state
+  updateSettings: (updates: Partial<AppState>) => Promise<void>;
+  setTheme: (theme: 'light' | 'dark') => Promise<void>;
+  completeOnboarding: () => Promise<void>;
+
+  // Helpers
+  refreshDailyTask: () => Promise<void>;
+}
+
+export const useTaskStore = create<TaskStore>((set, get) => ({
+  // Initial state
+  tasks: [],
+  dailyTask: null,
+  appState: null,
+  isLoading: true,
+  showTimeCheck: false,
+
+  // Initialize the store and database
+  initialize: async () => {
+    try {
+      await initializeDatabase();
+      const appState = await getAppState();
+      const tasks = await getAllTasks();
+
+      // Check if we need to show time availability check
+      const showTimeCheck = shouldShowTimeAvailabilityCheck(appState.lastDailyCheckDate);
+
+      let dailyTask: Task | null = null;
+
+      // Load existing daily task if we don't need time check
+      if (!showTimeCheck && appState.dailyTaskId) {
+        dailyTask = await getTaskById(appState.dailyTaskId) || null;
+      }
+
+      set({
+        tasks,
+        appState,
+        dailyTask,
+        showTimeCheck,
+        isLoading: false,
+      });
+    } catch (error) {
+      console.error('Error initializing store:', error);
+      set({ isLoading: false });
+    }
+  },
+
+  // Load all tasks
+  loadTasks: async () => {
+    try {
+      const tasks = await getAllTasks();
+      set({ tasks });
+    } catch (error) {
+      console.error('Error loading tasks:', error);
+    }
+  },
+
+  // Add a new task
+  addTask: async (taskData: CreateTaskInput) => {
+    try {
+      const newTask = await dbCreateTask(taskData);
+      const tasks = await getAllTasks();
+
+      set({ tasks });
+
+      // If no daily task is set, potentially set this as today's task
+      const state = get();
+      if (!state.dailyTask && state.appState?.todayTimeAvailability) {
+        await get().refreshDailyTask();
+      }
+    } catch (error) {
+      console.error('Error adding task:', error);
+      throw error;
+    }
+  },
+
+  // Update a task
+  updateTask: async (id: string, updates: Partial<Task>) => {
+    try {
+      await dbUpdateTask(id, updates);
+      const tasks = await getAllTasks();
+
+      set({ tasks });
+
+      // If we updated the current daily task, refresh it
+      const state = get();
+      if (state.dailyTask?.id === id) {
+        const updatedTask = await getTaskById(id);
+        set({ dailyTask: updatedTask || null });
+      }
+    } catch (error) {
+      console.error('Error updating task:', error);
+      throw error;
+    }
+  },
+
+  // Delete a task
+  deleteTask: async (id: string) => {
+    try {
+      await dbDeleteTask(id);
+      const tasks = await getAllTasks();
+
+      set({ tasks });
+
+      // If we deleted the current daily task, clear it
+      const state = get();
+      if (state.dailyTask?.id === id) {
+        await dbUpdateAppState({ dailyTaskId: undefined });
+        set({ dailyTask: null });
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      throw error;
+    }
+  },
+
+  // Check daily task with time availability
+  checkDailyTask: async (availability: TimeAvailability) => {
+    try {
+      const today = startOfDay(new Date());
+
+      // Get eligible tasks
+      const allTasks = await getAllTasks();
+      const eligibleTasks = getEligibleTasksForToday(allTasks);
+
+      // Select daily task
+      const selectedTask = selectDailyTask(eligibleTasks, availability);
+
+      // Update app state
+      await dbUpdateAppState({
+        lastDailyCheckDate: today,
+        dailyTaskId: selectedTask?.id,
+        todayTimeAvailability: availability,
+      });
+
+      const appState = await getAppState();
+
+      set({
+        dailyTask: selectedTask,
+        appState,
+        showTimeCheck: false,
+      });
+    } catch (error) {
+      console.error('Error checking daily task:', error);
+      throw error;
+    }
+  },
+
+  // Complete a task
+  completeTask: async (id: string) => {
+    try {
+      // Update task status
+      await dbUpdateTask(id, {
+        status: TaskStatus.Completed,
+        completedAt: new Date(),
+      });
+
+      // Clear daily task
+      await dbUpdateAppState({ dailyTaskId: undefined });
+
+      // Reload tasks
+      const tasks = await getAllTasks();
+      const appState = await getAppState();
+
+      set({
+        tasks,
+        dailyTask: null,
+        appState,
+      });
+    } catch (error) {
+      console.error('Error completing task:', error);
+      throw error;
+    }
+  },
+
+  // Postpone a task
+  postponeTask: async (id: string, days: number, reason?: string) => {
+    try {
+      // Calculate cooldown end date
+      const cooldownEnd = addDays(new Date(), days);
+
+      // Update task
+      await dbUpdateTask(id, {
+        status: TaskStatus.Postponed,
+        postponedUntil: cooldownEnd,
+        postponeReason: reason,
+      });
+
+      // Clear current daily task
+      await dbUpdateAppState({ dailyTaskId: undefined });
+
+      // Select a new task for today
+      const state = get();
+      const allTasks = await getAllTasks();
+      const eligibleTasks = getEligibleTasksForToday(allTasks);
+
+      const newTask = selectDailyTask(
+        eligibleTasks,
+        state.appState?.todayTimeAvailability || 'normal'
+      );
+
+      if (newTask) {
+        await dbUpdateAppState({ dailyTaskId: newTask.id });
+      }
+
+      // Reload state
+      const tasks = await getAllTasks();
+      const appState = await getAppState();
+
+      set({
+        tasks,
+        dailyTask: newTask,
+        appState,
+      });
+    } catch (error) {
+      console.error('Error postponing task:', error);
+      throw error;
+    }
+  },
+
+  // Update app settings
+  updateSettings: async (updates: Partial<AppState>) => {
+    try {
+      await dbUpdateAppState(updates);
+      const appState = await getAppState();
+      set({ appState });
+    } catch (error) {
+      console.error('Error updating settings:', error);
+      throw error;
+    }
+  },
+
+  // Set theme
+  setTheme: async (theme: 'light' | 'dark') => {
+    try {
+      await dbUpdateAppState({ theme });
+
+      // Update HTML class for dark mode
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+
+      const appState = await getAppState();
+      set({ appState });
+    } catch (error) {
+      console.error('Error setting theme:', error);
+      throw error;
+    }
+  },
+
+  // Complete onboarding
+  completeOnboarding: async () => {
+    try {
+      await dbUpdateAppState({ hasCompletedOnboarding: true });
+      const appState = await getAppState();
+      set({ appState });
+    } catch (error) {
+      console.error('Error completing onboarding:', error);
+      throw error;
+    }
+  },
+
+  // Refresh daily task (useful when tasks are added/changed)
+  refreshDailyTask: async () => {
+    try {
+      const state = get();
+
+      if (!state.appState?.todayTimeAvailability) {
+        return; // Can't refresh without time availability
+      }
+
+      const allTasks = await getAllTasks();
+      const eligibleTasks = getEligibleTasksForToday(allTasks);
+
+      const newTask = selectDailyTask(
+        eligibleTasks,
+        state.appState.todayTimeAvailability
+      );
+
+      if (newTask) {
+        await dbUpdateAppState({ dailyTaskId: newTask.id });
+        set({ dailyTask: newTask });
+      }
+    } catch (error) {
+      console.error('Error refreshing daily task:', error);
+    }
+  },
+}));
