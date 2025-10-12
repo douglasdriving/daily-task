@@ -17,8 +17,7 @@ import {
   shouldShowTimeAvailabilityCheck,
   getEligibleTasksForToday,
 } from '../utils/prioritization';
-import { startOfDay } from 'date-fns';
-import { addDays } from 'date-fns';
+import { startOfDay, addDays, isSameDay } from 'date-fns';
 
 interface TaskStore {
   // State
@@ -66,13 +65,20 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       const appState = await getAppState();
       const tasks = await getAllTasks();
 
-      // Check if we need to show time availability check
-      const showTimeCheck = shouldShowTimeAvailabilityCheck(appState.lastDailyCheckDate);
+      const today = startOfDay(new Date());
+
+      // Check if we've completed a task today
+      const hasCompletedToday = appState.lastCompletionDate &&
+        startOfDay(appState.lastCompletionDate).getTime() === today.getTime();
+
+      // Check if we need to show time availability check (only if haven't completed today)
+      const showTimeCheck = !hasCompletedToday &&
+        shouldShowTimeAvailabilityCheck(appState.lastDailyCheckDate);
 
       let dailyTask: Task | null = null;
 
-      // Load existing daily task if we don't need time check
-      if (!showTimeCheck && appState.dailyTaskId) {
+      // Load existing daily task if we don't need time check and haven't completed today
+      if (!showTimeCheck && !hasCompletedToday && appState.dailyTaskId) {
         dailyTask = await getTaskById(appState.dailyTaskId) || null;
       }
 
@@ -107,9 +113,14 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
 
       set({ tasks });
 
-      // If no daily task is set, potentially set this as today's task
+      // DON'T set as today's task if we've already completed one today
       const state = get();
-      if (!state.dailyTask && state.appState?.todayTimeAvailability) {
+      const today = startOfDay(new Date());
+      const hasCompletedToday = state.appState?.lastCompletionDate &&
+        startOfDay(state.appState.lastCompletionDate).getTime() === today.getTime();
+
+      // Only set as daily task if: no current task, has time availability, and hasn't completed today
+      if (!state.dailyTask && state.appState?.todayTimeAvailability && !hasCompletedToday) {
         await get().refreshDailyTask();
       }
     } catch (error) {
@@ -193,14 +204,19 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   // Complete a task
   completeTask: async (id: string) => {
     try {
+      const today = startOfDay(new Date());
+
       // Update task status
       await dbUpdateTask(id, {
         status: TaskStatus.Completed,
         completedAt: new Date(),
       });
 
-      // Clear daily task
-      await dbUpdateAppState({ dailyTaskId: undefined });
+      // Clear daily task and record completion date
+      await dbUpdateAppState({
+        dailyTaskId: undefined,
+        lastCompletionDate: today,
+      });
 
       // Reload tasks
       const tasks = await getAllTasks();

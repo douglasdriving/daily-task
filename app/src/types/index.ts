@@ -43,6 +43,7 @@ export type Theme = 'light' | 'dark';
 export interface AppState {
   id: string; // Always 'state' for singleton
   lastDailyCheckDate?: Date;
+  lastCompletionDate?: Date; // Track when last task was completed
   dailyTaskId?: string;
   notificationTime: string; // HH:mm format (e.g., "07:00")
   notificationsEnabled: boolean;

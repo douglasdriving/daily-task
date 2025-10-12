@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useTaskStore } from './stores/taskStore';
+import { Navigation } from './components/layouts/Navigation';
 import { DailyTaskView } from './components/features/DailyTaskView';
 import { TaskForm } from './components/features/TaskForm';
 import { TaskListView } from './components/features/TaskListView';
@@ -27,6 +28,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Navigation />
         <Routes>
           <Route path="/" element={<DailyTaskView />} />
           <Route path="/tasks" element={<TaskListView />} />
