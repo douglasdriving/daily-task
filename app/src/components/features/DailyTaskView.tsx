@@ -2,9 +2,10 @@ import { useTaskStore } from '../../stores/taskStore';
 import { TimeAvailabilityCheck } from './TimeAvailabilityCheck';
 import { TaskCard } from './TaskCard';
 import { EmptyState } from './EmptyState';
+import { startOfDay } from 'date-fns';
 
 export function DailyTaskView() {
-  const { dailyTask, showTimeCheck, checkDailyTask, isLoading } = useTaskStore();
+  const { dailyTask, showTimeCheck, checkDailyTask, isLoading, appState } = useTaskStore();
 
   if (isLoading) {
     return (
@@ -15,12 +16,29 @@ export function DailyTaskView() {
   }
 
   if (showTimeCheck) {
-    return <TimeAvailabilityCheck onSubmit={checkDailyTask} />;
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+        <TimeAvailabilityCheck onSubmit={checkDailyTask} />
+      </div>
+    );
   }
 
   if (!dailyTask) {
-    return <EmptyState type="noTasks" />;
+    // Check if we've completed a task today
+    const today = startOfDay(new Date());
+    const hasCompletedToday = appState?.lastCompletionDate &&
+      startOfDay(appState.lastCompletionDate).getTime() === today.getTime();
+
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+        <EmptyState type={hasCompletedToday ? "completed" : "noTasks"} />
+      </div>
+    );
   }
 
-  return <TaskCard task={dailyTask} />;
+  return (
+    <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+      <TaskCard task={dailyTask} />
+    </div>
+  );
 }

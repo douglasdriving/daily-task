@@ -35,12 +35,12 @@ export function TimeAvailabilityCheck({ onSubmit }: TimeAvailabilityCheckProps) 
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-          Good morning!
+    <div className="max-w-2xl mx-auto p-8">
+      <div className="text-center mb-12">
+        <h1 className="text-5xl font-serif font-semibold text-zen-bark dark:text-gray-100 mb-4">
+          Good morning
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
+        <p className="text-xl font-light text-zen-earth dark:text-gray-400">
           How is your available time today?
         </p>
       </div>

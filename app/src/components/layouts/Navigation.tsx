@@ -10,30 +10,29 @@ export function Navigation() {
   const pendingCount = getEligibleTasksForToday(tasks).length;
 
   return (
-    <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+    <nav className="bg-white/80 dark:bg-gray-800 border-b border-zen-stone/30 dark:border-gray-700 backdrop-blur-sm">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="flex justify-between h-20">
           <div className="flex items-center">
-            <Link
-              to="/"
-              className="text-xl font-bold text-gray-900 dark:text-gray-100"
-            >
-              Daily Task
-            </Link>
             {pendingCount > 0 && (
-              <span className="ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200">
-                {pendingCount} pending
-              </span>
+              <div className="flex items-center gap-3">
+                <svg className="w-5 h-5 text-zen-moss dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <span className="inline-flex items-center justify-center min-w-[1.5rem] h-6 px-2 rounded-full text-xs font-semibold bg-primary-500 text-white shadow-sm">
+                  {pendingCount}
+                </span>
+              </div>
             )}
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             <Link
               to="/"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-lg text-sm font-light transition-all ${
                 location.pathname === '/'
-                  ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                  ? 'bg-zen-sand dark:bg-gray-700 text-zen-bark dark:text-gray-100'
+                  : 'text-zen-earth dark:text-gray-400 hover:bg-zen-sand/50 dark:hover:bg-gray-700/50'
               }`}
             >
               Today
@@ -41,10 +40,10 @@ export function Navigation() {
 
             <Link
               to="/tasks"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-lg text-sm font-light transition-all ${
                 location.pathname === '/tasks'
-                  ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                  ? 'bg-zen-sand dark:bg-gray-700 text-zen-bark dark:text-gray-100'
+                  : 'text-zen-earth dark:text-gray-400 hover:bg-zen-sand/50 dark:hover:bg-gray-700/50'
               }`}
             >
               All Tasks
@@ -52,9 +51,9 @@ export function Navigation() {
 
             <Link
               to="/tasks/new"
-              className="inline-flex items-center px-4 py-2 rounded-md text-sm font-medium bg-primary-600 text-white hover:bg-primary-700 transition-colors"
+              className="inline-flex items-center px-5 py-2 rounded-lg text-sm font-light bg-primary-500 text-white hover:bg-primary-600 transition-all shadow-sm hover:shadow-md ml-2"
             >
-              <span className="text-lg mr-1">+</span> Add Task
+              <span className="text-lg mr-1.5">+</span> Add Task
             </Link>
           </div>
         </div>

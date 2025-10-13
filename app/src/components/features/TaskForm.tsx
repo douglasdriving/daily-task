@@ -139,22 +139,22 @@ export function TaskForm() {
             />
           )}
 
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={isSubmitting}
-              className="flex-1"
-            >
-              {isSubmitting ? 'Adding...' : 'Add Task'}
-            </Button>
+          <div className="flex gap-3 pt-4 justify-end">
             <Button
               type="button"
-              variant="secondary"
+              variant="danger"
+              size="sm"
               onClick={() => navigate('/')}
               disabled={isSubmitting}
             >
               Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="success"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Adding...' : 'Add Task'}
             </Button>
           </div>
         </form>
