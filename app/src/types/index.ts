@@ -1,9 +1,10 @@
 // Task-related types
 export enum ImportanceLevel {
-  Low = 1,
-  Medium = 2,
-  High = 3,
-  Critical = 4,
+  VeryLow = 1,
+  Low = 2,
+  Medium = 3,
+  High = 4,
+  Critical = 5,
 }
 
 export enum Duration {
@@ -27,6 +28,7 @@ export interface Task {
   description?: string;
   importance: ImportanceLevel;
   deadline?: Date;
+  startDate?: Date; // First date when this task can appear as daily
   estimatedDuration: Duration;
   createdAt: Date;
   completedAt?: Date;
@@ -67,6 +69,7 @@ export interface TaskFormData {
   description?: string;
   importance: ImportanceLevel;
   deadline?: Date;
+  startDate?: Date;
   estimatedDuration: Duration;
 }
 

@@ -9,10 +9,11 @@ import { Select } from '../ui/Select';
 import { Card } from '../ui/Card';
 
 const importanceOptions = [
-  { value: ImportanceLevel.Low, label: 'Low' },
-  { value: ImportanceLevel.Medium, label: 'Medium' },
-  { value: ImportanceLevel.High, label: 'High' },
-  { value: ImportanceLevel.Critical, label: 'Critical' },
+  { value: ImportanceLevel.VeryLow, label: 'Very Low - Nice to have, can be skipped indefinitely' },
+  { value: ImportanceLevel.Low, label: 'Low - Should be done eventually, but no rush' },
+  { value: ImportanceLevel.Medium, label: 'Medium - Important, should be done soon' },
+  { value: ImportanceLevel.High, label: 'High - Very important, should be prioritized' },
+  { value: ImportanceLevel.Critical, label: 'Critical - Must be done, no possibility of avoiding' },
 ];
 
 const durationOptions = [
@@ -37,6 +38,8 @@ export function TaskForm() {
 
   const [hasDeadline, setHasDeadline] = useState(false);
   const [deadlineDate, setDeadlineDate] = useState('');
+  const [hasStartDate, setHasStartDate] = useState(false);
+  const [startDateValue, setStartDateValue] = useState('');
   const [errors, setErrors] = useState<{ name?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -58,6 +61,7 @@ export function TaskForm() {
         name: formData.name.trim(),
         description: formData.description?.trim(),
         deadline: hasDeadline && deadlineDate ? new Date(deadlineDate) : undefined,
+        startDate: hasStartDate && startDateValue ? new Date(startDateValue) : undefined,
       };
 
       await addTask(taskData);
@@ -135,6 +139,30 @@ export function TaskForm() {
               type="date"
               value={deadlineDate}
               onChange={(e) => setDeadlineDate(e.target.value)}
+              min={new Date().toISOString().split('T')[0]}
+            />
+          )}
+
+          <div>
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={hasStartDate}
+                onChange={(e) => setHasStartDate(e.target.checked)}
+                className="w-4 h-4 text-primary-600 rounded focus:ring-2 focus:ring-primary-500"
+              />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Set a start date (when task can first appear)
+              </span>
+            </label>
+          </div>
+
+          {hasStartDate && (
+            <Input
+              label="Start Date"
+              type="date"
+              value={startDateValue}
+              onChange={(e) => setStartDateValue(e.target.value)}
               min={new Date().toISOString().split('T')[0]}
             />
           )}

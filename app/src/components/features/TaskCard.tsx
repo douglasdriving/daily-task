@@ -33,9 +33,6 @@ export function TaskCard({ task }: TaskCardProps) {
   return (
     <div className="max-w-3xl mx-auto p-8">
       <div className="text-center mb-12">
-        <p className="text-sm font-light tracking-wider uppercase text-zen-earth dark:text-gray-400 mb-6">
-          Your task for today
-        </p>
         <h1 className="text-5xl md:text-6xl font-serif font-semibold text-zen-bark dark:text-gray-100 leading-tight">
           {task.name}
         </h1>
@@ -85,10 +82,6 @@ export function TaskCard({ task }: TaskCardProps) {
           </Button>
         </div>
       </Card>
-
-      <div className="text-center text-sm font-light text-zen-earth dark:text-gray-400 italic">
-        <p>Focus on this one thing. You've got this.</p>
-      </div>
 
       {showPostpone && (
         <PostponeDialog

@@ -8,8 +8,8 @@ export function calculatePriorityScore(task: Task): number {
   let score = 0;
 
   // 1. Importance weight (0-40 points)
-  // Critical=40, High=30, Medium=20, Low=10
-  score += task.importance * 10;
+  // Critical=40, High=32, Medium=24, Low=16, VeryLow=8
+  score += task.importance * 8;
 
   // 2. Deadline urgency (0-40 points)
   if (task.deadline) {
@@ -123,6 +123,7 @@ export function shouldShowTimeAvailabilityCheck(lastCheckDate?: Date): boolean {
  */
 export function getEligibleTasksForToday(tasks: Task[]): Task[] {
   const now = new Date();
+  const today = startOfDay(now);
 
   return tasks.filter(task => {
     // Must be pending
@@ -132,6 +133,11 @@ export function getEligibleTasksForToday(tasks: Task[]): Task[] {
 
     // Check if task is in cooldown
     if (task.postponedUntil && task.postponedUntil > now) {
+      return false;
+    }
+
+    // Check if task has a start date in the future
+    if (task.startDate && startOfDay(task.startDate) > today) {
       return false;
     }
 
@@ -167,12 +173,14 @@ export function formatDuration(duration: Duration): string {
 export function getImportanceLabel(importance: number): string {
   switch (importance) {
     case 1:
-      return 'Low';
+      return 'Very Low';
     case 2:
-      return 'Medium';
+      return 'Low';
     case 3:
-      return 'High';
+      return 'Medium';
     case 4:
+      return 'High';
+    case 5:
       return 'Critical';
     default:
       return 'Unknown';
@@ -185,12 +193,14 @@ export function getImportanceLabel(importance: number): string {
 export function getImportanceColor(importance: number): string {
   switch (importance) {
     case 1:
-      return 'bg-gray-500';
+      return 'bg-gray-400';
     case 2:
-      return 'bg-blue-500';
+      return 'bg-gray-600';
     case 3:
-      return 'bg-orange-500';
+      return 'bg-blue-500';
     case 4:
+      return 'bg-orange-500';
+    case 5:
       return 'bg-red-500';
     default:
       return 'bg-gray-500';
