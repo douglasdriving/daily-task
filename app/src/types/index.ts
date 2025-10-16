@@ -88,7 +88,7 @@ export const POSTPONE_OPTIONS: PostponeOption[] = [
 ];
 
 // Helper type for task creation
-export type CreateTaskInput = Omit<Task, 'id' | 'createdAt' | 'status'>;
+export type CreateTaskInput = Omit<Task, 'id' | 'createdAt' | 'status' | 'order'>;
 
 // Helper type for task updates
 export type UpdateTaskInput = Partial<Omit<Task, 'id' | 'createdAt'>>;
