@@ -35,6 +35,7 @@ export interface Task {
   postponedUntil?: Date;
   postponeReason?: string;
   status: TaskStatus;
+  order: number; // User-defined order for prioritization
 }
 
 // App state types

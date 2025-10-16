@@ -88,14 +88,19 @@ export function selectDailyTask(
     score: calculatePriorityScore(task),
   }));
 
-  // 3. Sort by score (highest first), then by duration (shortest first) for same score
+  // 3. Sort by score (highest first), then by user-defined order, then by duration
   scoredTasks.sort((a, b) => {
     // Primary sort: by score (highest first)
     if (b.score !== a.score) {
       return b.score - a.score;
     }
 
-    // Secondary sort: by duration (shortest first) - "low hanging fruit"
+    // Secondary sort: by user-defined order (respect user's prioritization)
+    if (a.task.order !== b.task.order) {
+      return a.task.order - b.task.order;
+    }
+
+    // Tertiary sort: by duration (shortest first) - "low hanging fruit"
     return a.task.estimatedDuration - b.task.estimatedDuration;
   });
 

@@ -14,6 +14,28 @@ export class DailyTaskDatabase extends Dexie {
       tasks: 'id, status, deadline, createdAt, postponedUntil, importance',
       appState: 'id',
     });
+
+    // Version 2: Add order field
+    this.version(2).stores({
+      tasks: 'id, status, deadline, createdAt, postponedUntil, importance, order',
+      appState: 'id',
+    }).upgrade(async (tx) => {
+      // Migrate existing tasks to have an order field
+      const tasks = await tx.table('tasks').toArray();
+
+      // Sort tasks by importance (descending) and createdAt (ascending) to assign initial order
+      tasks.sort((a, b) => {
+        if (b.importance !== a.importance) {
+          return b.importance - a.importance;
+        }
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      });
+
+      // Assign order based on sorted position
+      for (let i = 0; i < tasks.length; i++) {
+        await tx.table('tasks').update(tasks[i].id, { order: i });
+      }
+    });
   }
 }
 
@@ -34,12 +56,19 @@ export async function initializeDatabase() {
 }
 
 // Task CRUD operations
-export async function createTask(taskData: Omit<Task, 'id' | 'createdAt' | 'status'>): Promise<Task> {
+export async function createTask(taskData: Omit<Task, 'id' | 'createdAt' | 'status' | 'order'>): Promise<Task> {
+  // Get the highest order value and add 1
+  const allTasks = await db.tasks.toArray();
+  const maxOrder = allTasks.length > 0
+    ? Math.max(...allTasks.map(t => t.order ?? -1))
+    : -1;
+
   const newTask: Task = {
     ...taskData,
     id: crypto.randomUUID(),
     createdAt: new Date(),
     status: TaskStatus.Pending,
+    order: maxOrder + 1,
   };
 
   await db.tasks.add(newTask);
@@ -67,6 +96,52 @@ export async function updateTask(id: string, updates: Partial<Task>): Promise<vo
 
 export async function deleteTask(id: string): Promise<void> {
   await db.tasks.delete(id);
+}
+
+// Reorder tasks
+export async function moveTaskUp(taskId: string): Promise<void> {
+  const task = await db.tasks.get(taskId);
+  if (!task) return;
+
+  // Get all pending tasks sorted by order
+  const tasks = await db.tasks
+    .where('status')
+    .equals('pending')
+    .sortBy('order');
+
+  const currentIndex = tasks.findIndex(t => t.id === taskId);
+  if (currentIndex <= 0) return; // Already at top or not found
+
+  // Swap with previous task
+  const previousTask = tasks[currentIndex - 1];
+  await db.tasks.update(task.id, { order: previousTask.order });
+  await db.tasks.update(previousTask.id, { order: task.order });
+}
+
+export async function moveTaskDown(taskId: string): Promise<void> {
+  const task = await db.tasks.get(taskId);
+  if (!task) return;
+
+  // Get all pending tasks sorted by order
+  const tasks = await db.tasks
+    .where('status')
+    .equals('pending')
+    .sortBy('order');
+
+  const currentIndex = tasks.findIndex(t => t.id === taskId);
+  if (currentIndex === -1 || currentIndex >= tasks.length - 1) return; // Already at bottom or not found
+
+  // Swap with next task
+  const nextTask = tasks[currentIndex + 1];
+  await db.tasks.update(task.id, { order: nextTask.order });
+  await db.tasks.update(nextTask.id, { order: task.order });
+}
+
+export async function reorderTasks(taskIds: string[]): Promise<void> {
+  // Update order for all tasks based on the provided order
+  for (let i = 0; i < taskIds.length; i++) {
+    await db.tasks.update(taskIds[i], { order: i });
+  }
 }
 
 // App state operations

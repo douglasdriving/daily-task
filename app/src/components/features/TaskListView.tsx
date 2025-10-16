@@ -13,9 +13,15 @@ import { formatDeadline, getDeadlineColor } from '../../utils/dateHelpers';
 export function TaskListView() {
   const navigate = useNavigate();
   const tasks = useTaskStore(state => state.tasks);
+  const moveTaskUp = useTaskStore(state => state.moveTaskUp);
+  const moveTaskDown = useTaskStore(state => state.moveTaskDown);
 
-  const pendingTasks = tasks.filter(t => t.status === 'pending');
-  const completedTasks = tasks.filter(t => t.status === 'completed');
+  const pendingTasks = tasks
+    .filter(t => t.status === 'pending')
+    .sort((a, b) => a.order - b.order);
+  const completedTasks = tasks
+    .filter(t => t.status === 'completed')
+    .sort((a, b) => (b.completedAt?.getTime() ?? 0) - (a.completedAt?.getTime() ?? 0));
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -45,9 +51,31 @@ export function TaskListView() {
             Pending Tasks ({pendingTasks.length})
           </h2>
           <div className="space-y-3">
-            {pendingTasks.map(task => (
+            {pendingTasks.map((task, index) => (
               <Card key={task.id} className="hover:shadow-lg transition-shadow">
-                <div className="flex justify-between items-start">
+                <div className="flex gap-3">
+                  <div className="flex flex-col gap-1">
+                    <button
+                      onClick={() => moveTaskUp(task.id)}
+                      disabled={index === 0}
+                      className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      title="Move up"
+                    >
+                      <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => moveTaskDown(task.id)}
+                      disabled={index === pendingTasks.length - 1}
+                      className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      title="Move down"
+                    >
+                      <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-2">
                       {task.name}

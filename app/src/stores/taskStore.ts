@@ -11,6 +11,8 @@ import {
   updateAppState as dbUpdateAppState,
   getEligibleTasks,
   getTaskById,
+  moveTaskUp as dbMoveTaskUp,
+  moveTaskDown as dbMoveTaskDown,
 } from '../db';
 import {
   selectDailyTask,
@@ -35,6 +37,8 @@ interface TaskStore {
   addTask: (taskData: CreateTaskInput) => Promise<void>;
   updateTask: (id: string, updates: Partial<Task>) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
+  moveTaskUp: (id: string) => Promise<void>;
+  moveTaskDown: (id: string) => Promise<void>;
 
   // Daily task flow
   checkDailyTask: (availability: TimeAvailability) => Promise<void>;
@@ -165,6 +169,30 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       }
     } catch (error) {
       console.error('Error deleting task:', error);
+      throw error;
+    }
+  },
+
+  // Move task up in priority
+  moveTaskUp: async (id: string) => {
+    try {
+      await dbMoveTaskUp(id);
+      const tasks = await getAllTasks();
+      set({ tasks });
+    } catch (error) {
+      console.error('Error moving task up:', error);
+      throw error;
+    }
+  },
+
+  // Move task down in priority
+  moveTaskDown: async (id: string) => {
+    try {
+      await dbMoveTaskDown(id);
+      const tasks = await getAllTasks();
+      set({ tasks });
+    } catch (error) {
+      console.error('Error moving task down:', error);
       throw error;
     }
   },
