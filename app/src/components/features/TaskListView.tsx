@@ -13,15 +13,44 @@ import { formatDeadline, getDeadlineColor } from '../../utils/dateHelpers';
 export function TaskListView() {
   const navigate = useNavigate();
   const tasks = useTaskStore(state => state.tasks);
-  const moveTaskUp = useTaskStore(state => state.moveTaskUp);
-  const moveTaskDown = useTaskStore(state => state.moveTaskDown);
+  const updateTask = useTaskStore(state => state.updateTask);
+  const deleteTask = useTaskStore(state => state.deleteTask);
 
   const pendingTasks = tasks
     .filter(t => t.status === 'pending')
-    .sort((a, b) => a.order - b.order);
+    .sort((a, b) => {
+      // Sort by importance (descending - higher first), then by deadline, then by creation date
+      if (b.importance !== a.importance) {
+        return b.importance - a.importance;
+      }
+      if (a.deadline && b.deadline) {
+        return a.deadline.getTime() - b.deadline.getTime();
+      }
+      if (a.deadline) return -1;
+      if (b.deadline) return 1;
+      return a.createdAt.getTime() - b.createdAt.getTime();
+    });
   const completedTasks = tasks
     .filter(t => t.status === 'completed')
     .sort((a, b) => (b.completedAt?.getTime() ?? 0) - (a.completedAt?.getTime() ?? 0));
+
+  const handleIncreaseImportance = async (taskId: string, currentImportance: number) => {
+    if (currentImportance < 5) {
+      await updateTask(taskId, { importance: currentImportance + 1 });
+    }
+  };
+
+  const handleDecreaseImportance = async (taskId: string, currentImportance: number) => {
+    if (currentImportance > 1) {
+      await updateTask(taskId, { importance: currentImportance - 1 });
+    }
+  };
+
+  const handleDeleteTask = async (taskId: string, taskName: string) => {
+    if (window.confirm(`Are you sure you want to delete "${taskName}"?`)) {
+      await deleteTask(taskId);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -51,25 +80,25 @@ export function TaskListView() {
             Pending Tasks ({pendingTasks.length})
           </h2>
           <div className="space-y-3">
-            {pendingTasks.map((task, index) => (
+            {pendingTasks.map((task) => (
               <Card key={task.id} className="hover:shadow-lg transition-shadow">
                 <div className="flex gap-3">
                   <div className="flex flex-col gap-1">
                     <button
-                      onClick={() => moveTaskUp(task.id)}
-                      disabled={index === 0}
+                      onClick={() => handleIncreaseImportance(task.id, task.importance)}
+                      disabled={task.importance === 5}
                       className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                      title="Move up"
+                      title="Increase priority"
                     >
                       <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                       </svg>
                     </button>
                     <button
-                      onClick={() => moveTaskDown(task.id)}
-                      disabled={index === pendingTasks.length - 1}
+                      onClick={() => handleDecreaseImportance(task.id, task.importance)}
+                      disabled={task.importance === 1}
                       className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                      title="Move down"
+                      title="Decrease priority"
                     >
                       <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -103,6 +132,17 @@ export function TaskListView() {
                         </span>
                       )}
                     </div>
+                  </div>
+                  <div className="flex items-start">
+                    <button
+                      onClick={() => handleDeleteTask(task.id, task.name)}
+                      className="p-2 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
+                      title="Delete task"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </Card>
