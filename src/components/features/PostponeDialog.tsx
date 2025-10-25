@@ -30,12 +30,12 @@ export function PostponeDialog({ task, onClose }: PostponeDialogProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+      <div className="bg-white dark:bg-[#5a1d34] rounded-lg shadow-xl max-w-md w-full p-6">
+        <h2 className="text-2xl font-semibold text-[#450920] dark:text-[#F9DBBD] mb-4">
           Postpone Task
         </h2>
 
-        <p className="text-gray-600 dark:text-gray-400 mb-4">
+        <p className="text-[#A53860] dark:text-[#FFA5AB] font-light mb-4">
           When can you revisit this task?
         </p>
 
@@ -46,11 +46,11 @@ export function PostponeDialog({ task, onClose }: PostponeDialogProps) {
               onClick={() => setSelectedDays(option.days)}
               className={`w-full p-3 rounded-lg text-left transition-all ${
                 selectedDays === option.days
-                  ? 'bg-primary-100 dark:bg-primary-900/30 ring-2 ring-primary-500'
-                  : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-[#F9DBBD] dark:bg-[#6f2440] ring-2 ring-[#A53860]'
+                  : 'bg-[#fdeae0] dark:bg-[#5a1d34]/50 hover:bg-[#F9DBBD] dark:hover:bg-[#6f2440]'
               }`}
             >
-              <span className="font-medium text-gray-900 dark:text-gray-100">
+              <span className="font-medium text-[#450920] dark:text-[#F9DBBD]">
                 {option.label}
               </span>
             </button>

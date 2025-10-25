@@ -12,7 +12,13 @@
       "Bash(git commit:*)",
       "Bash(npm run build)",
       "Bash(npm run dev)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(cmd //c \"taskkill //PID 4920 //F\")",
+      "Bash(cmd /c taskkill /PID 4920 /F)",
+      "Bash(npx kill-port:*)"
     ],
     "deny": [],
     "ask": []

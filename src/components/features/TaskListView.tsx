@@ -53,7 +53,7 @@ export function TaskListView() {
     <div className="max-w-4xl mx-auto p-6">
       {pendingTasks.length === 0 && completedTasks.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-[#A53860] dark:text-[#FFA5AB]">
             No other tasks
           </p>
         </div>
@@ -61,7 +61,7 @@ export function TaskListView() {
 
       {pendingTasks.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-xl font-semibold text-burgundy dark:text-peach mb-4">
+          <h2 className="text-xl font-semibold text-[#450920] dark:text-[#F9DBBD] mb-4">
             Pending ({pendingTasks.length})
           </h2>
           <div className="space-y-3">
@@ -72,30 +72,30 @@ export function TaskListView() {
                     <button
                       onClick={() => handleIncreaseImportance(task.id, task.importance)}
                       disabled={task.importance === 5}
-                      className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      className="p-1 rounded hover:bg-[#F9DBBD] dark:hover:bg-[#6f2440] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                       title="Increase priority"
                     >
-                      <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-[#450920] dark:text-[#F9DBBD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                       </svg>
                     </button>
                     <button
                       onClick={() => handleDecreaseImportance(task.id, task.importance)}
                       disabled={task.importance === 1}
-                      className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      className="p-1 rounded hover:bg-[#F9DBBD] dark:hover:bg-[#6f2440] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                       title="Decrease priority"
                     >
-                      <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-[#450920] dark:text-[#F9DBBD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-lg text-burgundy dark:text-peach mb-2">
+                    <h3 className="font-semibold text-lg text-[#450920] dark:text-[#F9DBBD] mb-2">
                       {task.name}
                     </h3>
                     {task.description && (
-                      <p className="text-burgundy-light dark:text-primary-200 text-sm font-light mb-2">
+                      <p className="text-[#A53860] dark:text-[#FFA5AB] text-sm font-light mb-2">
                         {task.description}
                       </p>
                     )}
@@ -103,7 +103,7 @@ export function TaskListView() {
                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white ${getImportanceColor(task.importance)}`}>
                         {getImportanceLabel(task.importance)}
                       </span>
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-[#F9DBBD] text-[#450920] dark:bg-[#6f2440] dark:text-[#F9DBBD]">
                         {formatDuration(task.estimatedDuration)}
                       </span>
                       {task.deadline && (
@@ -112,7 +112,7 @@ export function TaskListView() {
                         </span>
                       )}
                       {task.postponedUntil && task.postponedUntil > new Date() && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-[#FFA5AB] text-[#450920] dark:bg-[#8a2e50] dark:text-[#F9DBBD]">
                           On hold
                         </span>
                       )}
@@ -121,7 +121,7 @@ export function TaskListView() {
                   <div className="flex items-start">
                     <button
                       onClick={() => handleDeleteTask(task.id, task.name)}
-                      className="p-2 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
+                      className="p-2 rounded hover:bg-[#DA627D]/20 dark:hover:bg-[#DA627D]/20 text-[#DA627D] dark:text-[#FFA5AB] transition-colors"
                       title="Delete task"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,7 +138,7 @@ export function TaskListView() {
 
       {completedTasks.length > 0 && (
         <div>
-          <h2 className="text-xl font-semibold text-burgundy dark:text-peach mb-4">
+          <h2 className="text-xl font-semibold text-[#450920] dark:text-[#F9DBBD] mb-4">
             Completed ({completedTasks.length})
           </h2>
           <div className="space-y-3">
@@ -146,16 +146,16 @@ export function TaskListView() {
               <Card key={task.id} className="opacity-75">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 mr-3">
-                    <div className="w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-full bg-[#A53860] flex items-center justify-center">
                       <span className="text-white text-sm">✓</span>
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-burgundy dark:text-peach">
+                    <h3 className="font-semibold text-[#450920] dark:text-[#F9DBBD]">
                       {task.name}
                     </h3>
                     {task.completedAt && (
-                      <p className="text-sm font-light text-burgundy-light dark:text-primary-200">
+                      <p className="text-sm font-light text-[#A53860] dark:text-[#FFA5AB]">
                         Completed on {new Date(task.completedAt).toLocaleDateString()}
                       </p>
                     )}

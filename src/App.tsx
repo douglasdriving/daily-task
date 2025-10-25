@@ -9,11 +9,11 @@ function MainView() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-peach dark:bg-burgundy">
+    <div className="min-h-screen bg-[#F9DBBD] dark:bg-[#450920]">
       {/* Add task button - fixed in top-right corner */}
       <button
         onClick={() => navigate('/tasks/new')}
-        className="fixed top-6 right-6 z-40 p-3 rounded-full bg-primary-500 hover:bg-primary-600 shadow-lg hover:shadow-xl transition-all hover:scale-105"
+        className="fixed top-6 right-6 z-40 p-3 rounded-full bg-[#A53860] hover:bg-[#8a2e50] shadow-lg hover:shadow-xl transition-all hover:scale-105"
         aria-label="Add task"
       >
         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

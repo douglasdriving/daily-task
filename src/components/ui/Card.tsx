@@ -9,7 +9,7 @@ interface CardProps {
 export function Card({ children, className = '', onClick }: CardProps) {
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 ${className}`}
+      className={`bg-white dark:bg-[#5a1d34] rounded-lg shadow-md p-6 ${className}`}
       onClick={onClick}
     >
       {children}

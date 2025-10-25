@@ -8,7 +8,7 @@ export function EmptyState({ type }: EmptyStateProps) {
   if (type === 'completed') {
     return (
       <div className="max-w-2xl mx-auto p-8 text-center">
-          <h1 className="text-5xl font-medium text-burgundy dark:text-peach mb-4">
+          <h1 className="text-5xl font-medium text-[#450920] dark:text-[#F9DBBD] mb-4">
             Done.
           </h1>
       </div>
@@ -18,10 +18,10 @@ export function EmptyState({ type }: EmptyStateProps) {
   return (
     <div className="max-w-2xl mx-auto p-8 text-center">
       <div className="text-7xl mb-8">📝</div>
-      <h1 className="text-4xl font-medium text-burgundy dark:text-peach mb-2">
+      <h1 className="text-4xl font-medium text-[#450920] dark:text-[#F9DBBD] mb-2">
         No tasks yet
       </h1>
-      <p className="text-lg font-light text-burgundy-light dark:text-primary-200">
+      <p className="text-lg font-light text-[#A53860] dark:text-[#FFA5AB]">
         Tap the + button to add your first task
       </p>
     </div>

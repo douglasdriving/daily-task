@@ -13,18 +13,18 @@ export function PreviousDayTaskCheck({ task, onCompleted, onNotCompleted }: Prev
   return (
     <div className="max-w-2xl mx-auto p-8">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-medium text-burgundy dark:text-peach mb-6">
+        <h1 className="text-4xl font-medium text-[#450920] dark:text-[#F9DBBD] mb-6">
           Quick check
         </h1>
-        <p className="text-lg font-light text-burgundy-light dark:text-primary-200 mb-4">
+        <p className="text-lg font-light text-[#A53860] dark:text-[#FFA5AB] mb-4">
           Yesterday you were supposed to do:
         </p>
         <Card className="mb-6">
-          <h2 className="text-2xl font-medium text-burgundy dark:text-peach">
+          <h2 className="text-2xl font-medium text-[#450920] dark:text-[#F9DBBD]">
             {task.name}
           </h2>
         </Card>
-        <p className="text-lg font-light text-burgundy-light dark:text-primary-200">
+        <p className="text-lg font-light text-[#A53860] dark:text-[#FFA5AB]">
           Did you complete this task?
         </p>
       </div>

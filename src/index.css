@@ -1,1 +1,23 @@
 @import 'tailwindcss';
+
+@theme {
+  --font-family-sans: 'Lexend', system-ui, sans-serif;
+
+  /* Your custom color palette from Coolors */
+  --color-primary-50: #fef5f0;
+  --color-primary-100: #fdeae0;
+  --color-primary-200: #F9DBBD;
+  --color-primary-300: #FFA5AB;
+  --color-primary-400: #DA627D;
+  --color-primary-500: #A53860;
+  --color-primary-600: #8a2e50;
+  --color-primary-700: #6f2440;
+  --color-primary-800: #5a1d34;
+  --color-primary-900: #450920;
+
+  --color-peach: #F9DBBD;
+  --color-pink-light: #FFA5AB;
+  --color-pink: #DA627D;
+  --color-burgundy-light: #A53860;
+  --color-burgundy: #450920;
+}
