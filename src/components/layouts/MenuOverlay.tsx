@@ -21,20 +21,29 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-gradient-to-tr from-neon-purple via-neon-pink to-neon-orange flex items-center justify-center">
-      {/* Close button */}
-      <button
+    <>
+      {/* Modal backdrop */}
+      <div
+        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
-        className="absolute top-6 right-6 p-3 rounded-xl bg-black hover:bg-neon-yellow transition-all hover:scale-110 hover:rotate-90 border-4 border-white"
-        aria-label="Close menu"
-      >
-        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+      />
 
-      {/* Menu content */}
-      <div className="flex flex-col items-center justify-center space-y-8 w-full max-w-md px-8">
+      {/* Modal content */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+        <div className="relative bg-gradient-to-tr from-neon-purple via-neon-pink to-neon-orange rounded-3xl shadow-2xl border-8 border-black w-full max-w-2xl mx-4 pointer-events-auto overflow-hidden">
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-6 right-6 p-3 rounded-xl bg-black hover:bg-neon-yellow transition-all hover:scale-110 hover:rotate-90 border-4 border-white z-10"
+            aria-label="Close menu"
+          >
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Menu content */}
+          <div className="flex flex-col items-center justify-center space-y-8 w-full px-8 py-12">
         {/* Logo */}
         <img
           src="/logo.svg"
@@ -82,7 +91,9 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
             + ADD TASK
           </button>
         </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
