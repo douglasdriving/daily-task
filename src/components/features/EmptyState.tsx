@@ -13,27 +13,27 @@ export function EmptyState({ type }: EmptyStateProps) {
     return (
       <div className="max-w-2xl mx-auto p-8 text-center">
         <div className="mb-12">
-          <div className="text-9xl mb-8 animate-bounce">✓</div>
-          <h1 className="text-6xl font-bangers text-white drop-shadow-[0_0_20px_rgba(0,0,0,1)] mb-4 transform rotate-2">
-            CRUSHED IT!
+          <div className="text-7xl mb-8">✓</div>
+          <h1 className="text-5xl font-serif font-semibold text-zen-bark dark:text-gray-100 mb-4">
+            Well done
           </h1>
-          <p className="text-2xl font-shrikhand text-white drop-shadow-lg">
-            You're a CHAMPION!
+          <p className="text-xl font-light text-zen-earth dark:text-gray-400">
+            You've completed your task for today.
           </p>
         </div>
 
-        <div className="bg-neon-yellow/90 rounded-3xl p-8 mb-8 border-8 border-black transform -rotate-1">
-          <p className="text-black font-sans text-2xl">
-            Take a break. You earned it! 🎉
+        <div className="bg-zen-sand/50 dark:bg-primary-900/20 rounded-2xl p-8 mb-8">
+          <p className="text-zen-earth dark:text-gray-300 font-serif text-lg italic">
+            Rest well. See you tomorrow.
           </p>
         </div>
 
-        <button
+        <Button
+          variant="secondary"
           onClick={() => navigate('/tasks')}
-          className="px-8 py-4 rounded-2xl text-xl font-shrikhand bg-neon-cyan text-black hover:bg-neon-lime transition-all shadow-2xl hover:shadow-neon-pink hover:scale-105 border-4 border-black"
         >
-          VIEW ALL TASKS
-        </button>
+          View All Tasks
+        </Button>
       </div>
     );
   }
@@ -41,18 +41,19 @@ export function EmptyState({ type }: EmptyStateProps) {
   return (
     <div className="max-w-2xl mx-auto p-8 text-center">
       <div className="mb-12">
-        <div className="text-9xl mb-8 animate-pulse">📝</div>
-        <h1 className="text-5xl font-bangers text-white drop-shadow-[0_0_20px_rgba(0,0,0,1)] mb-2 transform -rotate-2">
-          NO TASKS YET!
+        <div className="text-7xl mb-8">📝</div>
+        <h1 className="text-4xl font-serif font-semibold text-zen-bark dark:text-gray-100 mb-2">
+          No tasks available
         </h1>
       </div>
 
-      <button
+      <Button
+        variant="primary"
         onClick={() => navigate('/tasks/new')}
-        className="px-10 py-6 rounded-2xl text-3xl font-bangers bg-neon-lime text-black hover:bg-neon-yellow transition-all shadow-2xl hover:shadow-neon-orange hover:scale-110 border-4 border-black transform rotate-1 hover:-rotate-1"
+        size="lg"
       >
-        + ADD YOUR FIRST TASK
-      </button>
+        Add Your First Task
+      </Button>
     </div>
   );
 }

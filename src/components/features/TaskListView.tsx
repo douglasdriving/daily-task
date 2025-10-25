@@ -54,24 +54,30 @@ export function TaskListView() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          All Tasks
+        </h1>
+        <Button variant="primary" onClick={() => navigate('/tasks/new')}>
+          Add Task
+        </Button>
+      </div>
+
       {pendingTasks.length === 0 && completedTasks.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-2xl font-bangers text-white drop-shadow-lg mb-6">
-            NO TASKS YET!
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            No tasks yet. Add your first task to get started!
           </p>
-          <button
-            onClick={() => navigate('/tasks/new')}
-            className="px-8 py-4 rounded-2xl text-xl font-shrikhand bg-neon-lime text-black hover:bg-neon-yellow transition-all shadow-2xl hover:scale-105 border-4 border-black"
-          >
-            ADD TASK
-          </button>
+          <Button variant="primary" onClick={() => navigate('/tasks/new')}>
+            Add Task
+          </Button>
         </div>
       )}
 
       {pendingTasks.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-4xl font-bangers text-white drop-shadow-[0_0_10px_rgba(0,0,0,0.8)] mb-6 transform -rotate-1">
-            PENDING ({pendingTasks.length})
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            Pending Tasks ({pendingTasks.length})
           </h2>
           <div className="space-y-3">
             {pendingTasks.map((task) => (
@@ -147,8 +153,8 @@ export function TaskListView() {
 
       {completedTasks.length > 0 && (
         <div>
-          <h2 className="text-4xl font-shrikhand text-white drop-shadow-[0_0_10px_rgba(0,0,0,0.8)] mb-6 transform rotate-1">
-            COMPLETED ({completedTasks.length})
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            Completed Tasks ({completedTasks.length})
           </h2>
           <div className="space-y-3">
             {completedTasks.map(task => (
@@ -177,12 +183,9 @@ export function TaskListView() {
       )}
 
       <div className="mt-8 text-center">
-        <button
-          onClick={() => navigate('/')}
-          className="px-8 py-4 rounded-2xl text-xl font-sans bg-neon-cyan text-black hover:bg-neon-lime transition-all shadow-xl hover:scale-105 border-4 border-black transform -rotate-1"
-        >
-          ← BACK TO TODAY
-        </button>
+        <Button variant="secondary" onClick={() => navigate('/')}>
+          Back to Today
+        </Button>
       </div>
     </div>
   );

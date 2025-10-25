@@ -8,24 +8,16 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: '#fff0f5',
-          100: '#ffe0ec',
-          200: '#ffc1d9',
-          300: '#ff91bd',
-          400: '#ff51a0',
-          500: '#ff0080',
-          600: '#e6006b',
-          700: '#cc0056',
-          800: '#b30042',
-          900: '#99002e',
-        },
-        neon: {
-          pink: '#ff006e',
-          lime: '#c0ff00',
-          cyan: '#00f5ff',
-          orange: '#ff6b00',
-          purple: '#9d00ff',
-          yellow: '#ffea00',
+          50: '#f5f7f4',
+          100: '#e8ece5',
+          200: '#d4dccf',
+          300: '#b5c4aa',
+          400: '#92a582',
+          500: '#738a65',
+          600: '#5a6e4f',
+          700: '#495841',
+          800: '#3d4837',
+          900: '#343d2f',
         },
         zen: {
           cream: '#faf8f3',
@@ -38,12 +30,8 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Righteous', 'system-ui', 'sans-serif'],
-        serif: ['Creepster', 'Georgia', 'serif'],
-        bangers: ['Bangers', 'cursive'],
-        monoton: ['Monoton', 'cursive'],
-        shrikhand: ['Shrikhand', 'cursive'],
-        pixel: ['Press Start 2P', 'cursive'],
+        sans: ['Lato', 'system-ui', 'sans-serif'],
+        serif: ['Crimson Text', 'Georgia', 'serif'],
       },
       spacing: {
         '18': '4.5rem',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Task } from '../../types';
 import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 
 interface PreviousDayTaskCheckProps {
   task: Task;
@@ -12,36 +13,40 @@ export function PreviousDayTaskCheck({ task, onCompleted, onNotCompleted }: Prev
   return (
     <div className="max-w-2xl mx-auto p-8">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bangers text-white drop-shadow-[0_0_15px_rgba(0,0,0,0.9)] mb-6 transform -rotate-2">
-          WAIT A SEC! 🤔
+        <h1 className="text-4xl font-serif font-semibold text-zen-bark dark:text-gray-100 mb-6">
+          Quick check
         </h1>
-        <p className="text-xl font-sans text-white drop-shadow-lg mb-4">
+        <p className="text-lg text-zen-earth dark:text-gray-400 mb-4">
           Yesterday you were supposed to do:
         </p>
-        <div className="bg-white/90 dark:bg-black/80 p-6 rounded-2xl border-6 border-black mb-6">
-          <h2 className="text-3xl font-shrikhand text-black dark:text-white">
+        <Card className="mb-6">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
             {task.name}
           </h2>
-        </div>
-        <p className="text-2xl font-bangers text-white drop-shadow-lg">
-          DID YOU DO IT?!
+        </Card>
+        <p className="text-lg text-zen-earth dark:text-gray-400">
+          Did you complete this task?
         </p>
       </div>
 
-      <div className="space-y-4">
-        <button
+      <div className="space-y-3">
+        <Button
+          variant="primary"
           onClick={onCompleted}
-          className="w-full px-8 py-6 rounded-2xl text-3xl font-bangers bg-neon-lime text-black hover:bg-neon-yellow transition-all shadow-2xl hover:scale-105 border-4 border-black transform -rotate-1 hover:rotate-1"
+          className="w-full"
+          size="lg"
         >
-          ✓ YES I DID!
-        </button>
+          Yes, I completed it
+        </Button>
 
-        <button
+        <Button
+          variant="secondary"
           onClick={onNotCompleted}
-          className="w-full px-8 py-6 rounded-2xl text-3xl font-shrikhand bg-neon-pink text-white hover:bg-neon-purple transition-all shadow-2xl hover:scale-105 border-4 border-black transform rotate-1 hover:-rotate-1"
+          className="w-full"
+          size="lg"
         >
-          Nope... 😔
-        </button>
+          No, I didn't
+        </Button>
       </div>
     </div>
   );
