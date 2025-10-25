@@ -9,7 +9,7 @@ function MainView() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-zen-cream dark:bg-gray-900">
+    <div className="min-h-screen bg-peach dark:bg-burgundy">
       {/* Add task button - fixed in top-right corner */}
       <button
         onClick={() => navigate('/tasks/new')}

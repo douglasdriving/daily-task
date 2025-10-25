@@ -8,30 +8,29 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: '#f5f7f4',
-          100: '#e8ece5',
-          200: '#d4dccf',
-          300: '#b5c4aa',
-          400: '#92a582',
-          500: '#738a65',
-          600: '#5a6e4f',
-          700: '#495841',
-          800: '#3d4837',
-          900: '#343d2f',
+          50: '#fef5f0',
+          100: '#fdeae0',
+          200: '#F9DBBD',
+          300: '#FFA5AB',
+          400: '#DA627D',
+          500: '#A53860',
+          600: '#8a2e50',
+          700: '#6f2440',
+          800: '#5a1d34',
+          900: '#450920',
         },
-        zen: {
-          cream: '#faf8f3',
-          sand: '#f0ebe3',
-          stone: '#d9d3c7',
-          sage: '#a8b5a0',
-          moss: '#738a65',
-          earth: '#8b7355',
-          bark: '#5d4e37',
+        peach: '#F9DBBD',
+        pink: {
+          light: '#FFA5AB',
+          DEFAULT: '#DA627D',
+        },
+        burgundy: {
+          light: '#A53860',
+          DEFAULT: '#450920',
         }
       },
       fontFamily: {
-        sans: ['Lato', 'system-ui', 'sans-serif'],
-        serif: ['Crimson Text', 'Georgia', 'serif'],
+        sans: ['Lexend', 'system-ui', 'sans-serif'],
       },
       spacing: {
         '18': '4.5rem',

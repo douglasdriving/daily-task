@@ -33,14 +33,14 @@ export function TaskCard({ task }: TaskCardProps) {
   return (
     <div className="max-w-3xl mx-auto p-8">
       <div className="text-center mb-12">
-        <h1 className="text-5xl md:text-6xl font-serif font-semibold text-zen-bark dark:text-gray-100 leading-tight">
+        <h1 className="text-5xl md:text-6xl font-medium text-burgundy dark:text-peach leading-tight">
           {task.name}
         </h1>
       </div>
 
       <Card className="mb-8">
         {task.description && (
-          <p className="text-zen-earth dark:text-gray-300 mb-6 font-serif text-lg leading-relaxed">
+          <p className="text-burgundy-light dark:text-primary-200 mb-6 font-light text-lg leading-relaxed">
             {task.description}
           </p>
         )}
@@ -50,7 +50,7 @@ export function TaskCard({ task }: TaskCardProps) {
             {getImportanceLabel(task.importance)} priority
           </span>
 
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-200 text-burgundy dark:bg-primary-700 dark:text-primary-100">
             {formatDuration(task.estimatedDuration)}
           </span>
 

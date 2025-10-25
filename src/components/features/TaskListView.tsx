@@ -61,7 +61,7 @@ export function TaskListView() {
 
       {pendingTasks.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="text-xl font-semibold text-burgundy dark:text-peach mb-4">
             Pending ({pendingTasks.length})
           </h2>
           <div className="space-y-3">
@@ -91,11 +91,11 @@ export function TaskListView() {
                     </button>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-2">
+                    <h3 className="font-semibold text-lg text-burgundy dark:text-peach mb-2">
                       {task.name}
                     </h3>
                     {task.description && (
-                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                      <p className="text-burgundy-light dark:text-primary-200 text-sm font-light mb-2">
                         {task.description}
                       </p>
                     )}
@@ -138,7 +138,7 @@ export function TaskListView() {
 
       {completedTasks.length > 0 && (
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="text-xl font-semibold text-burgundy dark:text-peach mb-4">
             Completed ({completedTasks.length})
           </h2>
           <div className="space-y-3">
@@ -146,16 +146,16 @@ export function TaskListView() {
               <Card key={task.id} className="opacity-75">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 mr-3">
-                    <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center">
                       <span className="text-white text-sm">✓</span>
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+                    <h3 className="font-semibold text-burgundy dark:text-peach">
                       {task.name}
                     </h3>
                     {task.completedAt && (
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm font-light text-burgundy-light dark:text-primary-200">
                         Completed on {new Date(task.completedAt).toLocaleDateString()}
                       </p>
                     )}
