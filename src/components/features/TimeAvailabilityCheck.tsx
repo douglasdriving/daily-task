@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TimeAvailability } from '../../types';
-import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 
 interface TimeAvailabilityCheckProps {
@@ -8,8 +7,6 @@ interface TimeAvailabilityCheckProps {
 }
 
 export function TimeAvailabilityCheck({ onSubmit }: TimeAvailabilityCheckProps) {
-  const [selected, setSelected] = useState<TimeAvailability | null>(null);
-
   const options: { value: TimeAvailability; label: string; description: string }[] = [
     {
       value: 'limited',
@@ -28,64 +25,38 @@ export function TimeAvailabilityCheck({ onSubmit }: TimeAvailabilityCheckProps) 
     },
   ];
 
-  const handleSubmit = () => {
-    if (selected) {
-      onSubmit(selected);
-    }
-  };
-
   return (
     <div className="max-w-2xl mx-auto p-8">
       <div className="text-center mb-12">
-        <h1 className="text-5xl font-serif font-semibold text-zen-bark dark:text-gray-100 mb-4">
-          Good morning
+        <h1 className="text-5xl font-bangers text-white drop-shadow-[0_0_15px_rgba(0,0,0,0.9)] mb-4 transform -rotate-2 animate-pulse">
+           HOW MUCH TIME YOU GOT?!
         </h1>
-        <p className="text-xl font-light text-zen-earth dark:text-gray-400">
-          How is your available time today?
-        </p>
       </div>
 
-      <div className="space-y-3">
-        {options.map((option) => (
-          <Card
+      <div className="space-y-6">
+        {options.map((option, index) => (
+          <button
             key={option.value}
-            className={`cursor-pointer transition-all ${
-              selected === option.value
-                ? 'ring-2 ring-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                : 'hover:shadow-lg'
-            }`}
-            onClick={() => setSelected(option.value)}
+            onClick={() => onSubmit(option.value)}
+            className="w-full"
           >
-            <div className="flex items-start">
-              <input
-                type="radio"
-                checked={selected === option.value}
-                onChange={() => setSelected(option.value)}
-                className="mt-1 w-4 h-4 text-primary-600 focus:ring-primary-500"
-              />
-              <div className="ml-3 flex-1">
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                  {option.label}
+            <div className={`p-6 rounded-2xl cursor-pointer transition-all hover:shadow-2xl hover:scale-110 active:scale-95 border-4 border-black ${
+              index === 0 ? 'bg-neon-pink transform -rotate-1 hover:rotate-1' :
+              index === 1 ? 'bg-neon-cyan transform rotate-1 hover:-rotate-1' :
+              'bg-neon-yellow transform -rotate-1 hover:rotate-2'
+            }`}>
+              <div className="flex items-center justify-center py-2">
+                <h3 className={`text-2xl font-bold ${
+                  index === 0 ? 'font-shrikhand text-white' :
+                  index === 1 ? 'font-sans text-black' :
+                  'font-bangers text-black'
+                }`}>
+                  {option.label.toUpperCase()}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {option.description}
-                </p>
               </div>
             </div>
-          </Card>
+          </button>
         ))}
-      </div>
-
-      <div className="mt-8">
-        <Button
-          variant="primary"
-          onClick={handleSubmit}
-          disabled={!selected}
-          className="w-full"
-          size="lg"
-        >
-          Continue
-        </Button>
       </div>
     </div>
   );

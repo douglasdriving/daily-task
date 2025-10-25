@@ -28,6 +28,8 @@ interface TaskStore {
   appState: AppState | null;
   isLoading: boolean;
   showTimeCheck: boolean;
+  showPreviousDayCheck: boolean;
+  previousDayTask: Task | null;
 
   // Actions
   initialize: () => Promise<void>;
@@ -44,6 +46,8 @@ interface TaskStore {
   checkDailyTask: (availability: TimeAvailability) => Promise<void>;
   completeTask: (id: string) => Promise<void>;
   postponeTask: (id: string, days: number, reason?: string) => Promise<void>;
+  handlePreviousDayTaskCompleted: () => Promise<void>;
+  handlePreviousDayTaskNotCompleted: () => Promise<void>;
 
   // App state
   updateSettings: (updates: Partial<AppState>) => Promise<void>;
@@ -61,6 +65,8 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   appState: null,
   isLoading: true,
   showTimeCheck: false,
+  showPreviousDayCheck: false,
+  previousDayTask: null,
 
   // Initialize the store and database
   initialize: async () => {
@@ -70,19 +76,37 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       const tasks = await getAllTasks();
 
       const today = startOfDay(new Date());
+      const yesterday = addDays(today, -1);
 
       // Check if we've completed a task today
       const hasCompletedToday = appState.lastCompletionDate &&
         startOfDay(appState.lastCompletionDate).getTime() === today.getTime();
 
-      // Check if we need to show time availability check (only if haven't completed today)
-      const showTimeCheck = !hasCompletedToday &&
+      // Check if there was a dailyTask from yesterday that wasn't completed
+      let previousDayTask: Task | null = null;
+      let showPreviousDayCheck = false;
+
+      if (!hasCompletedToday && appState.dailyTaskId) {
+        const lastCheckDate = appState.lastDailyCheckDate ? startOfDay(appState.lastDailyCheckDate) : null;
+
+        // If last check was yesterday and we have a daily task ID, check if it's still pending
+        if (lastCheckDate && lastCheckDate.getTime() === yesterday.getTime()) {
+          const yesterdayTask = await getTaskById(appState.dailyTaskId);
+          if (yesterdayTask && yesterdayTask.status === 'pending') {
+            previousDayTask = yesterdayTask;
+            showPreviousDayCheck = true;
+          }
+        }
+      }
+
+      // Check if we need to show time availability check (only if haven't completed today and no previous day check)
+      const showTimeCheck = !hasCompletedToday && !showPreviousDayCheck &&
         shouldShowTimeAvailabilityCheck(appState.lastDailyCheckDate);
 
       let dailyTask: Task | null = null;
 
       // Load existing daily task if we don't need time check and haven't completed today
-      if (!showTimeCheck && !hasCompletedToday && appState.dailyTaskId) {
+      if (!showTimeCheck && !hasCompletedToday && !showPreviousDayCheck && appState.dailyTaskId) {
         dailyTask = await getTaskById(appState.dailyTaskId) || null;
       }
 
@@ -91,6 +115,8 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
         appState,
         dailyTask,
         showTimeCheck,
+        showPreviousDayCheck,
+        previousDayTask,
         isLoading: false,
       });
     } catch (error) {
@@ -373,6 +399,56 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       }
     } catch (error) {
       console.error('Error refreshing daily task:', error);
+    }
+  },
+
+  // Handle when user says they completed yesterday's task
+  handlePreviousDayTaskCompleted: async () => {
+    try {
+      const state = get();
+      if (!state.previousDayTask) return;
+
+      const today = startOfDay(new Date());
+
+      // Mark the task as completed
+      await dbUpdateTask(state.previousDayTask.id, {
+        status: TaskStatus.Completed,
+        completedAt: new Date(),
+      });
+
+      // Record completion date as yesterday (when it was actually done)
+      const yesterday = addDays(today, -1);
+      await dbUpdateAppState({
+        lastCompletionDate: yesterday,
+        dailyTaskId: undefined,
+      });
+
+      // Now show time check for today
+      set({
+        showPreviousDayCheck: false,
+        previousDayTask: null,
+        showTimeCheck: true,
+      });
+
+      // Reload tasks
+      const tasks = await getAllTasks();
+      set({ tasks });
+    } catch (error) {
+      console.error('Error handling previous day task completion:', error);
+    }
+  },
+
+  // Handle when user says they didn't complete yesterday's task
+  handlePreviousDayTaskNotCompleted: async () => {
+    try {
+      // Just proceed with normal flow (show time check)
+      set({
+        showPreviousDayCheck: false,
+        previousDayTask: null,
+        showTimeCheck: true,
+      });
+    } catch (error) {
+      console.error('Error handling previous day task not completed:', error);
     }
   },
 }));

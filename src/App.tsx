@@ -1,56 +1,32 @@
-import { useEffect, useRef, useState } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useTaskStore } from './stores/taskStore';
-import { Navigation } from './components/layouts/Navigation';
+import { MenuOverlay } from './components/layouts/MenuOverlay';
 import { DailyTaskView } from './components/features/DailyTaskView';
 import { TaskForm } from './components/features/TaskForm';
 import { TaskListView } from './components/features/TaskListView';
 
 function AppContent() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const touchStartX = useRef<number>(0);
-  const touchEndX = useRef<number>(0);
-  const [swiping, setSwiping] = useState(false);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    setSwiping(true);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
-    if (!swiping) return;
-    setSwiping(false);
-
-    const swipeDistance = touchEndX.current - touchStartX.current;
-    const minSwipeDistance = 50;
-
-    // Only allow swipe on main views (not on task form)
-    if (location.pathname === '/tasks/new') return;
-
-    // Swipe left: go from Today to All Tasks
-    if (swipeDistance < -minSwipeDistance && location.pathname === '/') {
-      navigate('/tasks');
-    }
-
-    // Swipe right: go from All Tasks to Today
-    if (swipeDistance > minSwipeDistance && location.pathname === '/tasks') {
-      navigate('/');
-    }
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div
-      className="min-h-screen bg-zen-cream dark:bg-gray-900"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      <Navigation />
+    <div className="min-h-screen bg-gradient-to-br from-neon-lime via-neon-cyan to-neon-purple dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
+      {/* Menu button - fixed in top-right corner */}
+      <button
+        onClick={() => setMenuOpen(true)}
+        className="fixed top-6 right-6 z-40 p-4 rounded-full bg-neon-orange shadow-2xl hover:shadow-neon-pink hover:bg-neon-pink transition-all hover:scale-125 hover:rotate-12 border-4 border-black"
+        aria-label="Open menu"
+      >
+        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      </button>
+
+      {/* Menu overlay */}
+      <MenuOverlay isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+
+      {/* Main content */}
       <Routes>
         <Route path="/" element={<DailyTaskView />} />
         <Route path="/tasks" element={<TaskListView />} />

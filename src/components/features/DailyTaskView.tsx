@@ -1,11 +1,22 @@
 import { useTaskStore } from '../../stores/taskStore';
 import { TimeAvailabilityCheck } from './TimeAvailabilityCheck';
+import { PreviousDayTaskCheck } from './PreviousDayTaskCheck';
 import { TaskCard } from './TaskCard';
 import { EmptyState } from './EmptyState';
 import { startOfDay } from 'date-fns';
 
 export function DailyTaskView() {
-  const { dailyTask, showTimeCheck, checkDailyTask, isLoading, appState } = useTaskStore();
+  const {
+    dailyTask,
+    showTimeCheck,
+    checkDailyTask,
+    isLoading,
+    appState,
+    showPreviousDayCheck,
+    previousDayTask,
+    handlePreviousDayTaskCompleted,
+    handlePreviousDayTaskNotCompleted,
+  } = useTaskStore();
 
   if (isLoading) {
     return (
@@ -15,9 +26,21 @@ export function DailyTaskView() {
     );
   }
 
+  if (showPreviousDayCheck && previousDayTask) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <PreviousDayTaskCheck
+          task={previousDayTask}
+          onCompleted={handlePreviousDayTaskCompleted}
+          onNotCompleted={handlePreviousDayTaskNotCompleted}
+        />
+      </div>
+    );
+  }
+
   if (showTimeCheck) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+      <div className="flex items-center justify-center min-h-screen">
         <TimeAvailabilityCheck onSubmit={checkDailyTask} />
       </div>
     );

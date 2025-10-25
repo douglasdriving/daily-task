@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#ff0080" stroke="#000" stroke-width="8"/>
+
+  <!-- Second layer -->
+  <circle cx="100" cy="100" r="75" fill="#00f5ff" stroke="#000" stroke-width="6"/>
+
+  <!-- Third layer -->
+  <circle cx="100" cy="100" r="55" fill="#c0ff00" stroke="#000" stroke-width="4"/>
+
+  <!-- Big checkmark -->
+  <g transform="translate(50, 50)">
+    <!-- Checkmark shadow -->
+    <path d="M 25 50 L 45 70 L 95 20" fill="none" stroke="#000" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" transform="translate(2, 2)"/>
+
+    <!-- Main checkmark -->
+    <path d="M 25 50 L 45 70 L 95 20" fill="none" stroke="#000" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 25 50 L 45 70 L 95 20" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Fun accents - stars -->
+  <g fill="#ffea00" stroke="#000" stroke-width="2">
+    <path d="M 30 30 L 33 38 L 41 38 L 35 43 L 37 51 L 30 46 L 23 51 L 25 43 L 19 38 L 27 38 Z" transform="rotate(-15 30 40)"/>
+    <path d="M 170 40 L 172 46 L 178 46 L 173 50 L 175 56 L 170 52 L 165 56 L 167 50 L 162 46 L 168 46 Z" transform="rotate(20 170 46)"/>
+    <path d="M 160 160 L 163 168 L 171 168 L 165 173 L 167 181 L 160 176 L 153 181 L 155 173 L 149 168 L 157 168 Z" transform="rotate(-10 160 165)"/>
+  </g>
+</svg>
