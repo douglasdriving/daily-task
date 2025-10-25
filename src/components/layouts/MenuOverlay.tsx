@@ -52,17 +52,17 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
           style={{ animationDuration: '10s' }}
         />
 
-        <h2 className="text-6xl font-monoton text-white mb-4 drop-shadow-[0_0_10px_rgba(0,0,0,0.8)] transform -rotate-2">
+        <h2 className="text-7xl font-monoton text-neon-yellow mb-4 drop-shadow-[0_0_20px_rgba(0,0,0,1)] transform -rotate-2" style={{ WebkitTextStroke: '3px black' }}>
           MENU
         </h2>
 
         {/* Task count */}
         {pendingCount > 0 && (
           <div className="text-center transform rotate-3">
-            <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-neon-yellow text-black shadow-2xl border-8 border-black animate-pulse">
-              <span className="text-6xl font-bangers">{pendingCount}</span>
+            <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-neon-yellow shadow-2xl border-8 border-black animate-pulse">
+              <span className="text-7xl font-bangers" style={{ WebkitTextStroke: '2px black' }}>{pendingCount}</span>
             </div>
-            <p className="text-lg font-shrikhand text-white mt-3 drop-shadow-lg">
+            <p className="text-2xl font-shrikhand text-neon-yellow mt-3 drop-shadow-[0_0_10px_rgba(0,0,0,1)]" style={{ WebkitTextStroke: '2px black' }}>
               TASKS!
             </p>
           </div>
@@ -72,21 +72,24 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
         <div className="flex flex-col w-full space-y-4">
           <button
             onClick={() => handleNavigation('/')}
-            className="w-full px-6 py-5 rounded-2xl text-2xl font-bangers bg-neon-cyan text-black hover:bg-neon-lime transition-all shadow-2xl hover:shadow-neon-yellow hover:scale-105 border-4 border-black transform -rotate-1 hover:rotate-1"
+            className="w-full px-6 py-5 rounded-2xl text-3xl font-bangers bg-neon-cyan hover:bg-neon-lime transition-all shadow-2xl hover:shadow-neon-yellow hover:scale-110 border-8 border-black transform -rotate-1 hover:rotate-1"
+            style={{ WebkitTextStroke: '2px black' }}
           >
             TODAY'S TASK
           </button>
 
           <button
             onClick={() => handleNavigation('/tasks')}
-            className="w-full px-6 py-5 rounded-2xl text-2xl font-shrikhand bg-neon-pink text-white hover:bg-neon-purple transition-all shadow-2xl hover:shadow-neon-cyan hover:scale-105 border-4 border-black transform rotate-1 hover:-rotate-1"
+            className="w-full px-6 py-5 rounded-2xl text-3xl font-shrikhand bg-neon-pink hover:bg-neon-purple transition-all shadow-2xl hover:shadow-neon-cyan hover:scale-110 border-8 border-black transform rotate-1 hover:-rotate-1"
+            style={{ WebkitTextStroke: '2px white' }}
           >
             ALL TASKS
           </button>
 
           <button
             onClick={() => handleNavigation('/tasks/new')}
-            className="w-full px-6 py-5 rounded-2xl text-2xl font-sans bg-neon-lime text-black hover:bg-neon-yellow transition-all shadow-2xl hover:shadow-neon-orange hover:scale-105 border-4 border-black transform -rotate-1 hover:rotate-2"
+            className="w-full px-6 py-5 rounded-2xl text-3xl font-sans bg-neon-lime hover:bg-neon-yellow transition-all shadow-2xl hover:shadow-neon-orange hover:scale-110 border-8 border-black transform -rotate-1 hover:rotate-2"
+            style={{ WebkitTextStroke: '2px black' }}
           >
             + ADD TASK
           </button>
