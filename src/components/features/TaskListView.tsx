@@ -1,7 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTaskStore } from '../../stores/taskStore';
-import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import {
   formatDuration,
@@ -11,7 +9,6 @@ import {
 import { formatDeadline, getDeadlineColor } from '../../utils/dateHelpers';
 
 export function TaskListView() {
-  const navigate = useNavigate();
   const tasks = useTaskStore(state => state.tasks);
   const updateTask = useTaskStore(state => state.updateTask);
   const deleteTask = useTaskStore(state => state.deleteTask);
@@ -54,23 +51,11 @@ export function TaskListView() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-          All Tasks
-        </h1>
-        <Button variant="primary" onClick={() => navigate('/tasks/new')}>
-          Add Task
-        </Button>
-      </div>
-
       {pendingTasks.length === 0 && completedTasks.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            No tasks yet. Add your first task to get started!
+          <p className="text-gray-600 dark:text-gray-400">
+            No other tasks
           </p>
-          <Button variant="primary" onClick={() => navigate('/tasks/new')}>
-            Add Task
-          </Button>
         </div>
       )}
 
@@ -181,12 +166,6 @@ export function TaskListView() {
           </div>
         </div>
       )}
-
-      <div className="mt-8 text-center">
-        <Button variant="secondary" onClick={() => navigate('/')}>
-          Back to Today
-        </Button>
-      </div>
     </div>
   );
 }
