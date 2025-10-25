@@ -62,7 +62,7 @@ export function TaskListView() {
       {pendingTasks.length > 0 && (
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            Pending Tasks ({pendingTasks.length})
+            Pending ({pendingTasks.length})
           </h2>
           <div className="space-y-3">
             {pendingTasks.map((task) => (
@@ -139,7 +139,7 @@ export function TaskListView() {
       {completedTasks.length > 0 && (
         <div>
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            Completed Tasks ({completedTasks.length})
+            Completed ({completedTasks.length})
           </h2>
           <div className="space-y-3">
             {completedTasks.map(task => (
