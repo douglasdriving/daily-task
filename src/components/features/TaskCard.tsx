@@ -27,6 +27,7 @@ export function TaskCard({ task }: TaskCardProps) {
       await completeTask(task.id);
     } catch (error) {
       console.error('Error completing task:', error);
+    } finally {
       setIsCompleting(false);
     }
   };
@@ -37,6 +38,7 @@ export function TaskCard({ task }: TaskCardProps) {
       await completeTaskAndSelectNext(task.id);
     } catch (error) {
       console.error('Error completing task and selecting next:', error);
+    } finally {
       setIsCompleting(false);
     }
   };
