@@ -1,6 +1,7 @@
 Name: Daily Task
 Status: deployed
 Platform: Web
+IconPath: .vibe/icon.png
 Color: #FFBE0B
 TextColor: #000000
 

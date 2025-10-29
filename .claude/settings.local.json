@@ -18,7 +18,9 @@
       "Bash(taskkill:*)",
       "Bash(cmd //c \"taskkill //PID 4920 //F\")",
       "Bash(cmd /c taskkill /PID 4920 /F)",
-      "Bash(npx kill-port:*)"
+      "Bash(npx kill-port:*)",
+      "Read(//e/projects/vibe/vibe-hub/.vibe/**)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []

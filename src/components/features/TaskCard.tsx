@@ -17,6 +17,7 @@ interface TaskCardProps {
 
 export function TaskCard({ task }: TaskCardProps) {
   const completeTask = useTaskStore(state => state.completeTask);
+  const completeTaskAndSelectNext = useTaskStore(state => state.completeTaskAndSelectNext);
   const [showPostpone, setShowPostpone] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
 
@@ -26,6 +27,16 @@ export function TaskCard({ task }: TaskCardProps) {
       await completeTask(task.id);
     } catch (error) {
       console.error('Error completing task:', error);
+      setIsCompleting(false);
+    }
+  };
+
+  const handleAlreadyDone = async () => {
+    setIsCompleting(true);
+    try {
+      await completeTaskAndSelectNext(task.id);
+    } catch (error) {
+      console.error('Error completing task and selecting next:', error);
       setIsCompleting(false);
     }
   };
@@ -70,6 +81,15 @@ export function TaskCard({ task }: TaskCardProps) {
             className="w-full"
           >
             {isCompleting ? 'Completing...' : 'Mark Complete'}
+          </Button>
+
+          <Button
+            variant="secondary"
+            onClick={handleAlreadyDone}
+            disabled={isCompleting}
+            className="w-full"
+          >
+            Already Done
           </Button>
 
           <Button

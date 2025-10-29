@@ -45,6 +45,7 @@ interface TaskStore {
   // Daily task flow
   checkDailyTask: (availability: TimeAvailability) => Promise<void>;
   completeTask: (id: string) => Promise<void>;
+  completeTaskAndSelectNext: (id: string) => Promise<void>;
   postponeTask: (id: string, days: number, reason?: string) => Promise<void>;
   handlePreviousDayTaskCompleted: () => Promise<void>;
   handlePreviousDayTaskNotCompleted: () => Promise<void>;
@@ -283,6 +284,46 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       });
     } catch (error) {
       console.error('Error completing task:', error);
+      throw error;
+    }
+  },
+
+  // Complete a task and immediately select a new one for today
+  completeTaskAndSelectNext: async (id: string) => {
+    try {
+      const state = get();
+
+      // Update task status
+      await dbUpdateTask(id, {
+        status: TaskStatus.Completed,
+        completedAt: new Date(),
+      });
+
+      // Get all tasks and find eligible ones
+      const allTasks = await getAllTasks();
+      const eligibleTasks = getEligibleTasksForToday(allTasks);
+
+      // Select a new daily task
+      const newTask = selectDailyTask(
+        eligibleTasks,
+        state.appState?.todayTimeAvailability || 'normal'
+      );
+
+      // Update app state with new daily task
+      await dbUpdateAppState({
+        dailyTaskId: newTask?.id,
+      });
+
+      const tasks = await getAllTasks();
+      const appState = await getAppState();
+
+      set({
+        tasks,
+        dailyTask: newTask,
+        appState,
+      });
+    } catch (error) {
+      console.error('Error completing task and selecting next:', error);
       throw error;
     }
   },
