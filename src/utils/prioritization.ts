@@ -2,31 +2,33 @@ import { differenceInDays, startOfDay, isSameDay } from 'date-fns';
 import { Task, TimeAvailability, Duration } from '../types';
 
 /**
- * Calculate priority score for a task based on multiple factors
+ * Calculate priority score for a task based on multiple factors.
+ *
+ * Scoring ensures strict importance hierarchy: higher importance tasks
+ * always score higher than lower importance tasks, regardless of other factors.
+ * Deadline urgency and age act as tiebreakers within the same importance level.
  */
 export function calculatePriorityScore(task: Task): number {
-  let score = 0;
+  // Importance is the primary factor (multiplied by 1000 to ensure hierarchy)
+  // Critical=5000, High=4000, Medium=3000, Low=2000, VeryLow=1000
+  let score = task.importance * 1000;
 
-  // 1. Importance weight (0-40 points)
-  // Critical=40, High=32, Medium=24, Low=16, VeryLow=8
-  score += task.importance * 8;
-
-  // 2. Deadline urgency (0-40 points)
+  // Deadline urgency as tiebreaker (0-60 points within importance level)
   if (task.deadline) {
     const daysUntilDeadline = differenceInDays(task.deadline, new Date());
 
     if (daysUntilDeadline < 0) {
       // Overdue - maximum urgency
-      score += 40;
+      score += 60;
     } else if (daysUntilDeadline === 0) {
       // Due today
-      score += 35;
+      score += 50;
     } else if (daysUntilDeadline <= 3) {
       // Due in 3 days
-      score += 30;
+      score += 40;
     } else if (daysUntilDeadline <= 7) {
       // Due this week
-      score += 20;
+      score += 25;
     } else if (daysUntilDeadline <= 14) {
       // Due in 2 weeks
       score += 10;
@@ -34,10 +36,10 @@ export function calculatePriorityScore(task: Task): number {
     // Beyond 2 weeks gets 0 points for deadline urgency
   }
 
-  // 3. Age factor (0-20 points) - prevent task starvation
-  // Tasks that have been waiting longer get a boost
+  // Age factor as tiebreaker (0-30 points) - prevent task starvation
+  // Tasks that have been waiting longer get a boost within their importance level
   const daysInQueue = differenceInDays(new Date(), task.createdAt);
-  score += Math.min(daysInQueue, 20);
+  score += Math.min(daysInQueue, 30);
 
   return score;
 }

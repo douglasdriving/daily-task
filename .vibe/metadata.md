@@ -3,6 +3,7 @@ Status: deployed
 Platform: Web
 IconPath: .vibe/icon.png
 Color: #FFBE0B
+GitHubSync: false
 TextColor: #000000
 
 ## Description
